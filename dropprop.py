@@ -191,10 +191,9 @@ def main(run_k,splits):
         output_list = model(X,attr_adj)
         loss_consis = consis_loss(output_list)
         loss_train = 0
-        for i in range(args.sample):
-            loss_train += F.nll_loss(output_list[i][idx_train], labels[idx_train])
+        loss_train = F.nll_loss(output_list[0][idx_train], labels[idx_train])
         acc_train = accuracy(output_list[0][idx_train],labels[idx_train])
-        loss_train = loss_train / args.sample + loss_consis
+        loss_train = loss_train + loss_consis
 
 
 
@@ -305,7 +304,7 @@ def main(run_k,splits):
     acc, f1, auc = test()
     return acc, f1, auc
 
-# main(0,1)
+
 test_f1 = np.zeros([10])
 test_auc = np.zeros([10])
 test_acc = np.zeros([10])
@@ -314,21 +313,4 @@ for i in range(10):
 print(np.mean(test_acc),'+',np.std(test_acc))
 print(np.mean(test_auc),'+',np.std(test_auc))
 print(np.mean(test_f1),'+',np.std(test_f1))
-# acc = []
-# for i in range(10):
-#     acc.append(main(0,i))
-# print(np.mean(acc),'+',np.std(acc))
-# test_acc = np.zeros([10,5])
-# for i in range(10):
-#    for j in range(5):
-#        test_acc[i][j] = main(i,6)
-# print("10's result:", np.mean(test_acc[0])," + ",np.std(test_acc[0]))
-# print("20's result:", np.mean(test_acc[1])," + ",np.std(test_acc[1]))
-# print("30's result:", np.mean(test_acc[2])," + ",np.std(test_acc[2]))
-# print("40's result:", np.mean(test_acc[3])," + ",np.std(test_acc[3]))
-# print("50's result:", np.mean(test_acc[4])," + ",np.std(test_acc[4]))
-# print("60's result:", np.mean(test_acc[5])," + ",np.std(test_acc[5]))
-# print("70's result:", np.mean(test_acc[6])," + ",np.std(test_acc[6]))
-# print("80's result:", np.mean(test_acc[7])," + ",np.std(test_acc[7]))
-# print("90's result:", np.mean(test_acc[8])," + ",np.std(test_acc[8]))
-# print("10's result:", np.mean(test_acc[9])," + ",np.std(test_acc[9]))
+

@@ -121,13 +121,7 @@ def main(run_k,splits):
             ori_adj[i].append(norm_adj)
             new_adj = randomedge_sampler(adj,drop[i]).cuda()
             attr_adj[i].append(new_adj)
-    # attr_adj = [[],[]]
-    # for _ in range(args.group):
-    #     new_adj = randomedge_sampler(adj,args.drop1).cuda()
-    #     attr_adj[0].append(new_adj)
-    # for _ in range(args.group):
-    #     new_adj = randomedge_sampler(adj,args.drop2).cuda()
-    #     attr_adj[1].append(new_adj)
+
     data = data.cuda()
     split_idx = dataset.get_idx_split()
     train_idx = split_idx['train'].cuda()
@@ -193,9 +187,8 @@ def main(run_k,splits):
 
         loss_consis = consis_loss(output_list)
         output = output_list[0]
-        for i in range(args.sample):
-            loss_train = F.nll_loss(output_list[i][train_idx], data.y.squeeze(1)[train_idx])
-        loss_train = loss_train / args.sample + loss_consis
+        loss_train = F.nll_loss(output_list[0][train_idx], data.y.squeeze(1)[train_idx])
+        loss_train = loss_train + loss_consis
         y_pred = output.argmax(dim=-1, keepdim=True)
         acc_train = evaluator.eval({
         'y_true': data.y[train_idx],
@@ -329,7 +322,4 @@ for i in range(10):
 print(np.mean(test_acc),'+',np.std(test_acc))
 print(np.mean(test_auc),'+',np.std(test_auc))
 print(np.mean(test_f1),'+',np.std(test_f1))
-# acc = []
-# for i in range(10):
-#     acc.append(main(i,0))
-# print(np.mean(acc),'+',np.std(acc))
+
